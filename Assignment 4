@@ -82,7 +82,65 @@ public class NetworkId{
 i) take input through keyboard
 	a) the site address
 	b) no. of subnets required
-ii) display the ouput at the console xonsisting of
+ii) display the ouput at the console consisting of
 	a) the subnet mask
 	b) the starting and last address of each subnet
-  
+
+import java.net.*;
+import java.util.*;
+
+class SiteAddress {
+    static String findClass(String str){
+        int index = str.indexOf('.');
+        String ipsub = str.substring(0,index);
+        int ip = Integer.parseInt(ipsub);
+        if (ip>=1 && ip<=126)
+            return "A";
+        else if (ip>=128 && ip<=191)
+            return "B";
+        else if (ip>=192 && ip<223)
+            return "C";
+        else if (ip >=224 && ip<=239)
+            return "D";
+        else
+            return "E";
+    }
+    
+    static void findMask(String str, int n){
+    String cls = findClass(str);
+	if(cls=="D" || cls=="E") {
+	    System.out.println("Class D and E has no subnet mask!");
+	    return;
+	}
+	else {
+    int pow = (int) (Math.log(n) / Math.log(2));
+	String temp="";
+	if(cls=="A") {
+	    if(pow >=8){
+	        for (int i=0; i < pow; i++){
+	            temp+="1";
+	        }
+	        for (int i=0; i < 8-pow; i++){
+	            temp+="0";
+	        }
+	    }
+	    int dec = Integer.parseInt(temp,2);
+	    String tempstr = Integer.toString(dec);	    
+	    String mask = "255."+tempstr+".0.0";
+	    System.out.println(mask);
+    	}
+
+    }
+}
+    
+	public static void main(String[] args)
+	throws UnknownHostException {
+	Scanner sc = new Scanner(System.in);
+	System.out.println("Enter the Site Address: ");
+	String site = sc.nextLine();
+	System.out.println("Enter the no. of subnets required: ");
+	int n = sc.nextInt();
+	findMask(site,n);
+	sc.close();
+	}
+}
