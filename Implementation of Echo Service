@@ -4,6 +4,10 @@ Assignment 7
 CLIENT
 --------
 
+/* port num: 7
+knock knock
+command line args: a) server IP	b) msg	c) port no (other than 7) */
+
 import java.net.*;
 import java.io.*;
 public class EchoClient {
