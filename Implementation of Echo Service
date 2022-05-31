@@ -1,0 +1,58 @@
+Assignment 7
+
+--------
+CLIENT
+--------
+
+import java.net.*;
+import java.io.*;
+public class EchoClient {
+	public static void main (String args[]) throws IOException {
+		if((args.length <2) || (args.length >3))
+			throw new IllegalArgumetException("Parameter(s): <server> <word> [<port>]");	//3rd brackets mean optional arg
+		String server = args[0];
+		byte [] byteBuffer = args[1].getBytes();
+		int servPort = (args.length == 3) ? Integer.parseInt(args[2]):7;
+		Socket sock = new Socket(server, servPort);
+		System.out.println("Connected to server...sending echon string");
+		InputStream in = sock.getInputStream();
+		OutputStream out = sock.getOutputStream();
+		out.write(byteBuffer);
+		
+		int totalBytesRcvd = 0;
+		int bytesRcvd;
+		while (totalBytesRcvd < byteBuffer.length) {
+			if((bytesRcvd = in.read(byteBuffer, totalBytesRcvd, byteBuffer.length - totalBytesRcvd)) == -1)
+				throw new SocketException("Connection closed prematurely");
+			totalBytesRcvd += bytesRcvd;
+		}
+		system.out.println("Received: " +new String(byteBuffer));
+		sock.close();
+	}
+}
+
+-------
+SERVER
+-------
+
+import java.net.*;
+import java.io.*;
+public class EchoServer {
+	private static final int BUFSIZE = 80;
+	public static void main (String args[]) throws IOException {
+		if(args.length != 1)
+			throws new IllegalArgumentException("Parameter(s): <port>");
+		int servPort = Integer.parseInt(args[0]);
+		ServerSocket servSock = new ServerSocket(servPort);
+		int recvMsgSize;
+		byte[] byteBuffer = new byte[BUFSIZE];
+		for(;;) {
+			Socket clntSock = servSock.accept();
+			InputStream in = clntSock.getInputStream();
+			OutputStream out = clntSock.getOutputStream();
+			while ((recvMsgSize = in.read(byteBuffer)) != -1)
+				out.write(byteBuffer, 0, recvMsgSize);
+		clntSock.close();
+		}
+	}
+}
